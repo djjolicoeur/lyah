@@ -59,3 +59,84 @@ filter' _ [] = []
 filter' p (x:xs)
   | p x = x : filter' p xs
   | otherwise = filter' p xs
+
+
+quicksort' :: (Ord a) => [a] -> [a]
+quicksort' [] = []
+quicksort' (x:xs) =
+  let smallerOrEqual = filter' (<= x) xs
+      larger         = filter' (> x) xs
+  in quicksort' smallerOrEqual ++ [x] ++ quicksort' larger
+
+-- Find largest number < 100000 divisible by 3829
+
+largestDivisable :: Integer
+largestDivisable = head (filter p [100000,99999..])
+  where p x = mod x 3829 == 0
+
+-- Find sum of all odd squares < 10000
+
+sumExample :: Integer
+sumExample = sum (takeWhile (<10000) (filter odd (map (^2) [1..])))
+
+-- Sum of all odd squares <1000 but with list comprehensions
+
+sumExample' :: Integer
+sumExample' = sum (takeWhile (<10000) [m | m <- [n^2 | n <- [1..]], odd m])
+
+-- Fun with the collatz conjecture
+
+chain :: Integer -> [Integer]
+chain 1 = [1]
+chain n
+  | even n = n:chain (div n 2)
+  | odd n = n:chain (n*3 + 1)
+
+-- how many collatz sequences, starting between 1 and 1000 have chains > 15?
+
+numLongChains :: Int
+numLongChains = length (filter isLong (map chain [1..1000]))
+  where isLong xs = length xs > 15
+
+-- lambdas! same fn as above but with lambdas
+
+numLongChains' :: Int
+numLongChains' = length (filter (\xs -> length xs > 15) (map chain [1..1000]))
+
+-- Interesting example illustrating how fns are curried by default.
+
+addThree :: Int -> Int -> Int -> Int
+addThree x y z = x + y + z
+
+-- is equivalent to, albeiet more readable
+
+addThree' :: Int -> Int -> Int -> Int
+addThree' = \x -> \y -> \z -> x + y + z
+
+-- FLip with a lambda (even more readable)
+
+flip''' :: (a -> b -> c) -> b -> a -> c
+flip''' f = \x y -> f y x
+
+-- Folds
+
+-- sum with left fold
+
+sum' :: (Num a) => [a] -> a
+sum' xs = foldl (\acc x -> acc + x) 0 xs
+
+-- a sum thats even more simple
+
+sum'' :: (Num a) => [a] -> a
+sum'' = foldl (+) 0
+
+
+-- map with right fold
+
+map'' :: (a -> b) -> [a] -> [b]
+map'' f xs = foldr (\x acc -> f x : acc) [] xs
+
+-- elem with right fold
+
+elem' :: (Eq a) => a -> [a] -> Bool
+elem' y ys = foldr (\x acc -> if x == y then True else acc) False ys
