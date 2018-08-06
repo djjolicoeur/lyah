@@ -140,3 +140,51 @@ map'' f xs = foldr (\x acc -> f x : acc) [] xs
 
 elem' :: (Eq a) => a -> [a] -> Bool
 elem' y ys = foldr (\x acc -> if x == y then True else acc) False ys
+
+-- foldl1 & foldr1
+
+-- Maximum with foldl1
+
+maximum' :: (Ord a) => [a] -> a
+maximum' = foldl1 max
+
+-- reverse w/ foldl
+
+reverse' :: [a] -> [a]
+reverse' = foldl (\acc x -> x : acc) []
+
+-- Reverse but with flip (:), which is the equivalent of (\acc x -> x : acc)
+
+reverse'' :: [a] -> [a]
+reverse'' = foldl (flip (:)) []
+
+-- product with foldl
+
+product' :: (Num a) => [a] -> a
+product' = foldl (*) 1
+
+-- Filter via foldr
+
+filter'' :: (a -> Bool) -> [a] -> [a]
+filter'' p = foldr (\x acc -> if (p x) then x : acc else acc) []
+
+-- Last with foldl1
+
+last' :: [a] -> a
+last' = foldl1 (\_ x -> x)
+
+-- and with foldr, and' (repeat False) terminates, and' (repeat True) because
+-- of pattern matching in && immediately evals to False if the first param is
+-- False
+
+and' :: [Bool] -> Bool
+and' xs = foldr (&&) True xs
+
+-- scanl and scanr, like foldl,foldr but includes all intermediate acc states
+
+-- How many elements does it take for the sum of the square roots of all
+-- natural numbers to exceed 1,000?
+
+sqrtSums :: Int
+sqrtSums = length (takeWhile (<1000) (scanl1 (+) (map sqrt [1..]))) + 1
+
