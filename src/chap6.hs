@@ -17,3 +17,6 @@ numUniques = length . L.nub
 
 wordNums :: String -> [(String, Int)]
 wordNums = map (\ws -> (head ws, length ws)) . L.group . sort . L.words
+
+isIn :: (Eq a) => [a] -> [a] -> Bool
+needle `isIn` haystack = L.any (needle `L.isPrefixOf`) (L.tails haystack)
