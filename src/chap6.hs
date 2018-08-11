@@ -53,12 +53,12 @@ firstTo n = List.find (\x -> digitSum x == n) [1..]
 -- Assiciation Lists, Dictionaries...build our own maps..?
 
 phoneBook =
-  [(" betty", "555-2938")
-  ,(" bonnie", "452-2928")
-  ,(" patsy", "493-2928")
-  ,(" lucille", "205-2928")
-  ,(" wendy", "939-8282")
-  ,(" penny", "853-2492")]
+  [("betty", "555-2938")
+  ,("bonnie", "452-2928")
+  ,("patsy", "493-2928")
+  ,("lucille", "205-2928")
+  ,("wendy", "939-8282")
+  ,("penny", "853-2492")]
 
 -- get
 
@@ -90,3 +90,28 @@ phoneBook' = Map.fromList $
   ,("lucille", "205-2928")
   ,("wendy", "939-8282")
   ,("penny", "853-2492")]
+
+phoneBook'' =
+  [("betty", "555-2938")
+  ,("betty", "544-2935")
+  ,("bonnie", "452-2928")
+  ,("patsy", "493-2928")
+  ,("lucille", "205-2928")
+  ,("lucille", "206-2998")
+  ,("wendy", "939-8282")
+  ,("penny", "853-2492")]
+
+
+  -- String2digits
+
+string2digits :: String -> [Int]
+string2digits = map Char.digitToInt . filter Char.isDigit
+
+phoneBookToMap :: (Ord k) => [(k, String)] -> Map.Map k String
+phoneBookToMap xs = Map.fromListWith add xs
+  where add number1 number2 = number1 ++ ", " ++ number2
+
+-- phoneBookToMap' alternative
+
+phoneBookToMap' :: (Ord k) => [(k,a)] -> Map.Map k [a]
+phoneBookToMap' xs = Map.fromListWith (++) $ map (\(k,v) -> (k, [v])) xs
